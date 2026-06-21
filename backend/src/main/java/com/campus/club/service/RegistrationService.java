@@ -37,6 +37,10 @@ public class RegistrationService {
             throw new BusinessException("活动不存在");
         }
 
+        if (!"NOT_STARTED".equals(activity.getStatus())) {
+            throw new BusinessException("只有未开始的活动才能报名");
+        }
+
         QueryWrapper<Registration> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("activity_id", activityId)
                 .eq("user_id", userId)

@@ -45,6 +45,10 @@ public class CheckinService {
             throw new BusinessException("活动不存在");
         }
 
+        if (!"IN_PROGRESS".equals(activity.getStatus())) {
+            throw new BusinessException("只有进行中的活动才能签到");
+        }
+
         QueryWrapper<Registration> regQuery = new QueryWrapper<>();
         regQuery.eq("activity_id", activityId)
                 .eq("user_id", userId)
