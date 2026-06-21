@@ -1,0 +1,608 @@
+========================================
+  校园社团活动管理系统 - 接口测试
+========================================
+
+=== 1. 认证接口测试 ===
+
+--- 1.1 注册 - 管理员 ---
+请求: POST http://localhost:8080/api/auth/register
+数据: {
+  "username": "admin1",
+  "name": "系统管理员",
+  "studentNo": "A001",
+  "password": "123456",
+  "phone": "13800138001",
+  "role": "ADMIN"
+}
+返回: {
+  "code": 500,
+  "message": "用户名已存在",
+  "data": null
+}
+
+--- 1.2 注册 - 学生1 ---
+请求: POST http://localhost:8080/api/auth/register
+数据: {
+  "username": "student1",
+  "name": "张三",
+  "studentNo": "2024001",
+  "password": "123456",
+  "phone": "13800138002",
+  "role": "STUDENT"
+}
+返回: {
+  "code": 500,
+  "message": "用户名已存在",
+  "data": null
+}
+
+--- 1.3 注册 - 学生2 ---
+请求: POST http://localhost:8080/api/auth/register
+数据: {
+  "username": "student2",
+  "name": "李四",
+  "studentNo": "2024002",
+  "password": "123456",
+  "phone": "13800138003",
+  "role": "STUDENT"
+}
+返回: {
+  "code": 500,
+  "message": "用户名已存在",
+  "data": null
+}
+
+--- 1.4 登录 - 管理员 ---
+请求: POST http://localhost:8080/api/auth/login
+数据: {
+  "username": "admin1",
+  "password": "123456"
+}
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4xIiwiaWF0IjoxNzgyMDE4NjQzLCJleHAiOjE3ODIxMDUwNDN9.4SJehIzBSauLE3nQkq8EhpaVbFb2phA_khg_YyXngCI",
+    "user": {
+      "id": 1,
+      "username": "admin1",
+      "name": "系统管理员",
+      "studentNo": "A001",
+      "phone": "13800138001",
+      "role": "ADMIN",
+      "createdAt": "2026-06-21T13:03:39"
+    }
+  }
+}
+
+--- 1.5 登录 - 学生1 ---
+请求: POST http://localhost:8080/api/auth/login
+数据: {
+  "username": "student1",
+  "password": "123456"
+}
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInVzZXJJZCI6MiwidXNlcm5hbWUiOiJzdHVkZW50MSIsImlhdCI6MTc4MjAxODY0MywiZXhwIjoxNzgyMTA1MDQzfQ.kaDD6SfkoOgGB-0OhhTvo3IC553QDi1PkyonVNnQOjE",
+    "user": {
+      "id": 2,
+      "username": "student1",
+      "name": "张三",
+      "studentNo": "2024001",
+      "phone": "13800138002",
+      "role": "STUDENT",
+      "createdAt": "2026-06-21T13:03:40"
+    }
+  }
+}
+
+--- 1.6 登录 - 学生2 ---
+请求: POST http://localhost:8080/api/auth/login
+数据: {
+  "username": "student2",
+  "password": "123456"
+}
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInVzZXJJZCI6MywidXNlcm5hbWUiOiJzdHVkZW50MiIsImlhdCI6MTc4MjAxODY0MywiZXhwIjoxNzgyMTA1MDQzfQ.ra_S35-Ts-TspQ5DY-MAy3ahdh8pxycy921yXzsMPZE",
+    "user": {
+      "id": 3,
+      "username": "student2",
+      "name": "李四",
+      "studentNo": "2024002",
+      "phone": "13800138003",
+      "role": "STUDENT",
+      "createdAt": "2026-06-21T13:03:40"
+    }
+  }
+}
+
+--- 1.7 获取当前用户 - 管理员 ---
+请求: GET http://localhost:8080/api/auth/me
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "id": 1,
+    "username": "admin1",
+    "name": "系统管理员",
+    "studentNo": "A001",
+    "phone": "13800138001",
+    "role": "ADMIN",
+    "createdAt": "2026-06-21T13:03:39"
+  }
+}
+
+--- 1.8 未登录访问测试 ---
+请求: GET http://localhost:8080/api/activities (无Token)
+返回: {
+  "code": 401,
+  "message": "未登录，请先登录",
+  "data": null
+}
+
+=== 2. 活动管理接口测试 ===
+
+--- 2.1 创建活动 - 管理员 ---
+请求: POST http://localhost:8080/api/activities
+数据: {
+  "activityDate": "2026-06-25",
+  "name": "2024年校园歌手大赛",
+  "description": "欢迎各位同学踊跃报名参加！",
+  "maxCapacity": 100,
+  "location": "学校大礼堂",
+  "status": "NOT_STARTED",
+  "clubName": "文艺社"
+}
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "id": 3,
+    "name": "2024年校园歌手大赛",
+    "clubName": "文艺社",
+    "activityDate": "2026-06-25",
+    "location": "学校大礼堂",
+    "maxCapacity": 100,
+    "description": "欢迎各位同学踊跃报名参加！",
+    "status": "NOT_STARTED",
+    "createdAt": "2026-06-21T13:10:43.6566871",
+    "updatedAt": "2026-06-21T13:10:43.6566871",
+    "deleted": null,
+    "registeredCount": null
+  }
+}
+活动ID: 3
+
+--- 2.2 创建活动2 - 管理员 ---
+请求: POST http://localhost:8080/api/activities
+数据: {
+  "activityDate": "2026-06-28",
+  "name": "程序设计竞赛",
+  "description": "提升编程能力，赢取丰厚奖品！",
+  "maxCapacity": 50,
+  "location": "教学楼A101",
+  "status": "NOT_STARTED",
+  "clubName": "计算机协会"
+}
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "id": 4,
+    "name": "程序设计竞赛",
+    "clubName": "计算机协会",
+    "activityDate": "2026-06-28",
+    "location": "教学楼A101",
+    "maxCapacity": 50,
+    "description": "提升编程能力，赢取丰厚奖品！",
+    "status": "NOT_STARTED",
+    "createdAt": "2026-06-21T13:10:43.6940837",
+    "updatedAt": "2026-06-21T13:10:43.6940837",
+    "deleted": null,
+    "registeredCount": null
+  }
+}
+活动ID: 4
+
+--- 2.3 学生创建活动（无权限） ---
+请求: POST http://localhost:8080/api/activities (学生Token)
+返回: {
+  "code": 403,
+  "message": "只有管理员可以创建活动",
+  "data": null
+}
+
+--- 2.4 获取活动列表 - 学生 ---
+请求: GET http://localhost:8080/api/activities
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": [
+    {
+      "id": 4,
+      "name": "程序设计竞赛",
+      "clubName": "计算机协会",
+      "activityDate": "2026-06-28",
+      "location": "教学楼A101",
+      "maxCapacity": 50,
+      "description": "提升编程能力，赢取丰厚奖品！",
+      "status": "NOT_STARTED",
+      "createdAt": "2026-06-21T13:10:44",
+      "updatedAt": "2026-06-21T13:10:44",
+      "registeredCount": 0
+    },
+    {
+      "id": 2,
+      "name": "程序设计竞赛",
+      "clubName": "计算机协会",
+      "activityDate": "2026-06-28",
+      "location": "教学楼A101",
+      "maxCapacity": 50,
+      "description": "提升编程能力，赢取丰厚奖品！",
+      "status": "NOT_STARTED",
+      "createdAt": "2026-06-21T13:07:08",
+      "updatedAt": "2026-06-21T13:07:08",
+      "registeredCount": 0
+    },
+    {
+      "id": 3,
+      "name": "2024年校园歌手大赛",
+      "clubName": "文艺社",
+      "activityDate": "2026-06-25",
+      "location": "学校大礼堂",
+      "maxCapacity": 100,
+      "description": "欢迎各位同学踊跃报名参加！",
+      "status": "NOT_STARTED",
+      "createdAt": "2026-06-21T13:10:44",
+      "updatedAt": "2026-06-21T13:10:44",
+      "registeredCount": 0
+    },
+    {
+      "id": 1,
+      "name": "2024年校园歌手大赛",
+      "clubName": "文艺社",
+      "activityDate": "2026-06-25",
+      "location": "学校大礼堂",
+      "maxCapacity": 100,
+      "description": "欢迎各位同学踊跃报名参加！",
+      "status": "NOT_STARTED",
+      "createdAt": "2026-06-21T13:07:08",
+      "updatedAt": "2026-06-21T13:07:08",
+      "registeredCount": 0
+    }
+  ]
+}
+
+--- 2.5 按日期获取活动 ---
+请求: GET http://localhost:8080/api/activities/day?date=2026-06-25
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": [
+    {
+      "id": 3,
+      "name": "2024年校园歌手大赛",
+      "clubName": "文艺社",
+      "activityDate": "2026-06-25",
+      "location": "学校大礼堂",
+      "maxCapacity": 100,
+      "description": "欢迎各位同学踊跃报名参加！",
+      "status": "NOT_STARTED",
+      "createdAt": "2026-06-21T13:10:44",
+      "updatedAt": "2026-06-21T13:10:44",
+      "registeredCount": 0
+    },
+    {
+      "id": 1,
+      "name": "2024年校园歌手大赛",
+      "clubName": "文艺社",
+      "activityDate": "2026-06-25",
+      "location": "学校大礼堂",
+      "maxCapacity": 100,
+      "description": "欢迎各位同学踊跃报名参加！",
+      "status": "NOT_STARTED",
+      "createdAt": "2026-06-21T13:07:08",
+      "updatedAt": "2026-06-21T13:07:08",
+      "registeredCount": 0
+    }
+  ]
+}
+
+--- 2.6 修改活动 - 管理员 ---
+请求: PUT http://localhost:8080/api/activities/3
+数据: {
+  "name": "2024年校园歌手大赛（改）",
+  "description": "活动时间调整，欢迎报名！"
+}
+返回: {
+  "code": 400,
+  "message": "活动地点不能为空, 所属社团不能为空, 活动日期不能为空, 人数上限不能为空",
+  "data": null
+}
+
+--- 2.7 修改活动状态 ---
+请求: PATCH http://localhost:8080/api/activities/3/status
+数据: {
+  "status": "IN_PROGRESS"
+}
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "id": 3,
+    "name": "2024年校园歌手大赛",
+    "clubName": "文艺社",
+    "activityDate": "2026-06-25",
+    "location": "学校大礼堂",
+    "maxCapacity": 100,
+    "description": "欢迎各位同学踊跃报名参加！",
+    "status": "IN_PROGRESS",
+    "createdAt": "2026-06-21T13:10:44",
+    "updatedAt": "2026-06-21T13:10:43.8266931",
+    "deleted": 0,
+    "registeredCount": null
+  }
+}
+
+=== 3. 报名管理接口测试 ===
+
+--- 3.1 学生1报名活动1 ---
+请求: POST http://localhost:8080/api/activities/3/registrations
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "id": 1,
+    "activityId": 3,
+    "userId": 2,
+    "studentName": "张三",
+    "studentNo": "2024001",
+    "phone": "13800138002",
+    "status": "REGISTERED",
+    "registeredAt": "2026-06-21T13:10:43.8635313",
+    "createdAt": "2026-06-21T13:10:43.8635313",
+    "updatedAt": "2026-06-21T13:10:43.8635313",
+    "deleted": null
+  }
+}
+报名ID: 1
+
+--- 3.2 学生2报名活动1 ---
+请求: POST http://localhost:8080/api/activities/3/registrations
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "id": 2,
+    "activityId": 3,
+    "userId": 3,
+    "studentName": "李四",
+    "studentNo": "2024002",
+    "phone": "13800138003",
+    "status": "REGISTERED",
+    "registeredAt": "2026-06-21T13:10:43.8962797",
+    "createdAt": "2026-06-21T13:10:43.8962797",
+    "updatedAt": "2026-06-21T13:10:43.8962797",
+    "deleted": null
+  }
+}
+报名ID: 2
+
+--- 3.3 重复报名测试 ---
+请求: POST http://localhost:8080/api/activities/3/registrations (学生1重复报名)
+返回: {
+  "code": 500,
+  "message": "您已经报名过此活动",
+  "data": null
+}
+
+--- 3.4 学生查看自己的报名记录 ---
+请求: GET http://localhost:8080/api/users/me/registrations
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": [
+    {
+      "id": 1,
+      "activityId": 3,
+      "activityName": "2024年校园歌手大赛",
+      "userId": 2,
+      "studentName": "张三",
+      "studentNo": "2024001",
+      "phone": "13800138002",
+      "status": "REGISTERED",
+      "registeredAt": "2026-06-21T13:10:44",
+      "checkedIn": false
+    }
+  ]
+}
+
+--- 3.5 管理员查看活动报名人员 ---
+请求: GET http://localhost:8080/api/activities/3/registrations
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": [
+    {
+      "id": 1,
+      "activityId": 3,
+      "activityName": "2024年校园歌手大赛",
+      "userId": 2,
+      "studentName": "张三",
+      "studentNo": "2024001",
+      "phone": "13800138002",
+      "status": "REGISTERED",
+      "registeredAt": "2026-06-21T13:10:44",
+      "checkedIn": false
+    },
+    {
+      "id": 2,
+      "activityId": 3,
+      "activityName": "2024年校园歌手大赛",
+      "userId": 3,
+      "studentName": "李四",
+      "studentNo": "2024002",
+      "phone": "13800138003",
+      "status": "REGISTERED",
+      "registeredAt": "2026-06-21T13:10:44",
+      "checkedIn": false
+    }
+  ]
+}
+
+=== 4. 签到管理接口测试 ===
+
+--- 4.1 管理员给学生1签到 ---
+请求: POST http://localhost:8080/api/activities/3/checkins
+数据: {
+  "userId": 2,
+  "remark": "正常签到"
+}
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "id": 1,
+    "activityId": 3,
+    "userId": 2,
+    "checkinTime": "2026-06-21T13:10:43.9959599",
+    "remark": "正常签到",
+    "createdAt": "2026-06-21T13:10:43.9959599",
+    "updatedAt": "2026-06-21T13:10:43.9959599",
+    "deleted": null
+  }
+}
+
+--- 4.2 重复签到测试 ---
+请求: POST http://localhost:8080/api/activities/3/checkins (学生1重复签到)
+返回: {
+  "code": 500,
+  "message": "该学生已签到，不能重复签到",
+  "data": null
+}
+
+--- 4.3 未报名学生签到测试 ---
+请求: POST http://localhost:8080/api/activities/4/checkins (活动2学生1未报名)
+返回: {
+  "code": 500,
+  "message": "该学生未报名此活动，无法签到",
+  "data": null
+}
+
+--- 4.4 查看活动签到记录 ---
+请求: GET http://localhost:8080/api/activities/3/checkins
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": [
+    {
+      "id": 1,
+      "activityId": 3,
+      "activityName": "2024年校园歌手大赛",
+      "userId": 2,
+      "studentName": "张三",
+      "studentNo": "2024001",
+      "phone": "13800138002",
+      "status": null,
+      "registeredAt": "2026-06-21T13:10:44",
+      "checkedIn": true
+    }
+  ]
+}
+
+--- 4.5 查看签到状态统计 ---
+请求: GET http://localhost:8080/api/activities/3/checkins/status
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "totalRegistered": 2,
+    "checkedInCount": 1,
+    "notCheckedInCount": 1,
+    "checkedInList": [
+      {
+        "id": 1,
+        "activityId": 3,
+        "activityName": "2024年校园歌手大赛",
+        "userId": 2,
+        "studentName": "张三",
+        "studentNo": "2024001",
+        "phone": "13800138002",
+        "status": "REGISTERED",
+        "registeredAt": "2026-06-21T13:10:44",
+        "checkedIn": true
+      }
+    ],
+    "notCheckedInList": [
+      {
+        "id": 2,
+        "activityId": 3,
+        "activityName": "2024年校园歌手大赛",
+        "userId": 3,
+        "studentName": "李四",
+        "studentNo": "2024002",
+        "phone": "13800138003",
+        "status": "REGISTERED",
+        "registeredAt": "2026-06-21T13:10:44",
+        "checkedIn": false
+      }
+    ]
+  }
+}
+
+=== 5. 统计接口测试 ===
+
+--- 5.1 月度统计 ---
+请求: GET http://localhost:8080/api/stats?month=2026-06
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "month": "2026-06",
+    "totalActivities": 4,
+    "totalRegistrations": 2,
+    "totalCheckins": 1,
+    "totalNotCheckins": 1,
+    "clubStats": [
+      {
+        "clubName": "文艺社",
+        "activityCount": 2,
+        "registrationCount": 2,
+        "checkinCount": 1
+      },
+      {
+        "clubName": "计算机协会",
+        "activityCount": 2,
+        "registrationCount": 0,
+        "checkinCount": 0
+      }
+    ]
+  }
+}
+
+=== 6. 取消报名和删除活动 ===
+
+--- 6.1 学生2取消报名 ---
+请求: DELETE http://localhost:8080/api/registrations/2
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": "取消报名成功"
+}
+
+--- 6.2 删除活动2 ---
+请求: DELETE http://localhost:8080/api/activities/4
+返回: {
+  "code": 200,
+  "message": "操作成功",
+  "data": "删除成功"
+}
+
+========================================
+  所有接口测试完成！
+========================================
